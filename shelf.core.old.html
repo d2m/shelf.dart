@@ -1,0 +1,136 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>shelf.core.old Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="favicon.ico">
+        
+        </head>
+        <body data-library="shelf.core.old">
+        <div class="page">
+        <div class="header">
+          <a href="index.html"><div class="logo"></div></a>
+          <a href="index.html">Dart Documentation</a>
+         &rsaquo; <a href="shelf.core.old.html">shelf.core.old</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+<h2><strong>shelf.core.old</strong> library</h2>
+<div>
+<h3>Functions</h3>
+<div class="method"><h4 id="fromHttpRequest">
+<button class="show-code">Code</button>
+<a href="shelf.core/ShelfRequest.html">ShelfRequest</a> <strong>fromHttpRequest</strong>(<a href="http://api.dartlang.org/dart_io/HttpRequest.html" ref="external">HttpRequest</a> request) <a class="anchor-link" href="#fromHttpRequest"
+              title="Permalink to fromHttpRequest">#</a></h4>
+<div class="doc">
+<p>Creates a new <code>ShelfRequset</code> from the provided <a class="crossref" href="http://api.dartlang.org/dart_io/HttpRequest.html">HttpRequest</a>.</p>
+<pre class="source">
+ShelfRequest fromHttpRequest(HttpRequest request) {
+
+ var headers = &lt;String, String&gt; {
+   ShelfRequest.PATH_INFO: request.uri.path,
+   ShelfRequest.REQUEST_METHOD: request.method,
+   ShelfRequest.SCRIPT_NAME: '',
+   ShelfRequest.SERVER_PORT: request.connectionInfo.localPort.toString(),
+   ShelfRequest.SERVER_PROTOCOL: 'HTTP/${request.protocolVersion}'
+ };
+
+ String contentType = (request.headers.contentType == null) ?
+     null : request.headers.contentType.toString();
+
+ if (request.headers.contentType != null) {
+   headers[ShelfRequest.CONTENT_TYPE] = request.headers.contentType.toString();
+ }
+
+ if (request.contentLength &gt;= 0) {
+   headers[ShelfRequest.CONTENT_LENGTH] = request.contentLength.toString();
+ }
+
+ request.headers.forEach((k, v) {
+   assert(k != null);
+
+   var newKey = k.replaceAll('-', '_').toUpperCase();
+
+   if (!headers.containsKey(newKey)) {
+     newKey = 'HTTP_$newKey';
+
+     headers[newKey] = v.single;
+   }
+ });
+
+ return new ShelfRequest(headers);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="handleRequest">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_async/Future.html" ref="external">Future</a> <strong>handleRequest</strong>(<a href="shelf.core/ShelfHandler.html">ShelfHandler</a> handler, <a href="http://api.dartlang.org/dart_io/HttpRequest.html" ref="external">HttpRequest</a> request) <a class="anchor-link" href="#handleRequest"
+              title="Permalink to handleRequest">#</a></h4>
+<div class="doc">
+<pre class="source">
+Future handleRequest(ShelfHandler handler, HttpRequest request) {
+ var shelfRequest = fromHttpRequest(request);
+
+ return new Future.sync(() =&gt; handler(shelfRequest))
+   .catchError((error, StackTrace stackTrace) {
+     // TODO(kevmoo): how to handle errors? Option to throw or not?
+     return _logError(['Error thrown by handler', error, stackTrace]);
+   })
+   .then((ShelfResponse response) {
+     if(response == null) {
+       // TODO(kevmoo): option for handling null result?
+       response = _logError(['null response from handler']);
+     }
+
+     return _writeResponse(response, request.response);
+   });
+
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="serve">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_async/StreamSubscription.html" ref="external">StreamSubscription</a>&lt;<a href="http://api.dartlang.org/dart_io/HttpRequest.html" ref="external">HttpRequest</a>&gt; <strong>serve</strong>(<a href="shelf.core/ShelfHandler.html">ShelfHandler</a> handler, <a href="http://api.dartlang.org/dart_async/Stream.html" ref="external">Stream</a>&lt;<a href="http://api.dartlang.org/dart_io/HttpRequest.html" ref="external">HttpRequest</a>&gt; requests) <a class="anchor-link" href="#serve"
+              title="Permalink to serve">#</a></h4>
+<div class="doc">
+<p>Serve a <a class="crossref" href="http://api.dartlang.org/dart_async/Stream.html">Stream</a> of <a class="crossref" href="http://api.dartlang.org/dart_io/HttpRequest.html">HttpRequest</a>s.</p>
+<p><a class="crossref" href="http://api.dartlang.org/dart_io/HttpServer.html">HttpServer</a> implements [Stream<HttpRequest>] so it can be passed directly to
+<a class="crossref" href="shelf.core.old.html#serve">serve</a>.</p>
+<pre class="source">
+StreamSubscription&lt;HttpRequest&gt; serve(ShelfHandler handler,
+   Stream&lt;HttpRequest&gt; requests) {
+ assert(handler != null);
+
+ // TODO(kevmoo): how do we think about errors here?
+
+ return requests.listen((request) {
+   // TODO(kevmoo): do we care about throttling the stream here?
+   handleRequest(handler, request);
+ });
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="client-live-nav.js"></script>
+        </body></html>
+        

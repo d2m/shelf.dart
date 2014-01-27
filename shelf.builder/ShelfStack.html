@@ -1,0 +1,125 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ShelfStack class / shelf.builder Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="shelf.builder" data-type="ShelfStack">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../shelf.builder.html">shelf.builder</a> &rsaquo; <a href="../shelf.builder/ShelfStack.html">ShelfStack</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ShelfStack</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ShelfStack {
+ final ShelfStack _parent;
+ final ShelfMiddleware _builder;
+
+ const ShelfStack() :
+   _builder = null, _parent = null;
+
+ ShelfStack._(this._builder, this._parent) {
+   assert(_builder != null);
+   assert(_parent != null);
+ }
+
+ ShelfStack addMiddleware(ShelfMiddleware builder) =&gt;
+     new ShelfStack._(builder, this);
+
+ ShelfHandler addApp(ShelfHandler handler) {
+   assert(handler != null);
+
+   if(_builder == null) {
+     assert(_parent == null);
+     return handler;
+   } else {
+     return _parent.addApp(_builder(handler));
+   }
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+const <strong>ShelfStack</strong>() <a class="anchor-link" href="#"
+              title="Permalink to ShelfStack.ShelfStack">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="http://api.dartlang.org/dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="http://api.dartlang.org/dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="http://api.dartlang.org/dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Object.html" ref="external">Object</a> </div></div>
+<pre class="source">
+const ShelfStack() :
+ _builder = null, _parent = null;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="addApp">
+<button class="show-code">Code</button>
+<a href="../shelf.core/ShelfHandler.html">ShelfHandler</a> <strong>addApp</strong>(<a href="../shelf.core/ShelfHandler.html">ShelfHandler</a> handler) <a class="anchor-link" href="#addApp"
+              title="Permalink to ShelfStack.addApp">#</a></h4>
+<div class="doc">
+<pre class="source">
+ShelfHandler addApp(ShelfHandler handler) {
+ assert(handler != null);
+
+ if(_builder == null) {
+   assert(_parent == null);
+   return handler;
+ } else {
+   return _parent.addApp(_builder(handler));
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="addMiddleware">
+<button class="show-code">Code</button>
+<a href="../shelf.builder/ShelfStack.html">ShelfStack</a> <strong>addMiddleware</strong>(<a href="../shelf.builder/ShelfMiddleware.html">ShelfMiddleware</a> builder) <a class="anchor-link" href="#addMiddleware"
+              title="Permalink to ShelfStack.addMiddleware">#</a></h4>
+<div class="doc">
+<pre class="source">
+ShelfStack addMiddleware(ShelfMiddleware builder) =&gt;
+   new ShelfStack._(builder, this);
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

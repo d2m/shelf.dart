@@ -1,0 +1,133 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ShelfResponse abstract class / shelf.core Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="shelf.core" data-type="ShelfResponse">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../shelf.core.html">shelf.core</a> &rsaquo; <a href="../shelf.core/ShelfResponse.html">ShelfResponse</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ShelfResponse</strong>
+          abstract class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Represents the response from a <a class="crossref" href="../shelf.core/ShelfRequest.html">ShelfRequest</a>.</p>
+<p>Subclasses must implement <a class="crossref" href="../shelf.core/ShelfResponse.html#read">read</a>.</p>
+<pre class="source">
+abstract class ShelfResponse {
+
+ /**
+  * Represents the HTTP status code of the response.
+  */
+ final int statusCode;
+
+ /**
+  * Represents the HTTP headers of the response.
+  */
+ final Map&lt;String, String&gt; headers;
+
+ /**
+  * Creates a [ShelfResponse] with a [String] body.
+  */
+ factory ShelfResponse.string(int statusCode, Map&lt;String, String&gt; headers,
+     String body) = _StringShelfResponse;
+
+ ShelfResponse._(this.statusCode, Map&lt;String, String&gt; headers) :
+   // copy the source map to ensure headers are immutable
+   this.headers = new UnmodifiableMapView(new Map.from(headers)) {
+   assert(statusCode != null);
+   assert(statusCode &gt; 0);
+ }
+
+ // TODO: no clue how to handle encoding correctly here..
+ /**
+  * Returns a [Stream] representing the body of the response.
+  */
+ Stream&lt;List&lt;int&gt;&gt; read();
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="string">
+<button class="show-code">Code</button>
+factory <strong>ShelfResponse.string</strong>(<a href="http://api.dartlang.org/dart_core/int.html" ref="external">int</a> statusCode, <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>&gt; headers, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> body) <a class="anchor-link" href="#string"
+              title="Permalink to ShelfResponse.ShelfResponse.string">#</a></h4>
+<div class="doc">
+<p>Creates a <a class="crossref" href="../shelf.core/ShelfResponse.html">ShelfResponse</a> with a <a class="crossref" href="http://api.dartlang.org/dart_core/String.html">String</a> body.</p>
+<pre class="source">
+factory ShelfResponse.string(int statusCode, Map&lt;String, String&gt; headers,
+   String body) = _StringShelfResponse;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="headers">
+<button class="show-code">Code</button>
+final <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>&gt;         <strong>headers</strong> <a class="anchor-link"
+            href="#headers"
+            title="Permalink to ShelfResponse.headers">#</a>
+        </h4>
+        <div class="doc">
+<p>Represents the HTTP headers of the response.</p>
+<pre class="source">
+final Map&lt;String, String&gt; headers
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="statusCode">
+<button class="show-code">Code</button>
+final <a href="http://api.dartlang.org/dart_core/int.html" ref="external">int</a>         <strong>statusCode</strong> <a class="anchor-link"
+            href="#statusCode"
+            title="Permalink to ShelfResponse.statusCode">#</a>
+        </h4>
+        <div class="doc">
+<p>Represents the HTTP status code of the response.</p>
+<pre class="source">
+final int statusCode
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="read">
+abstract <a href="http://api.dartlang.org/dart_async/Stream.html" ref="external">Stream</a>&lt;<a href="http://api.dartlang.org/dart_core/List.html" ref="external">List</a>&lt;<a href="http://api.dartlang.org/dart_core/int.html" ref="external">int</a>&gt;&gt; <strong>read</strong>() <a class="anchor-link" href="#read"
+              title="Permalink to ShelfResponse.read">#</a></h4>
+<div class="doc">
+<p>Returns a <a class="crossref" href="http://api.dartlang.org/dart_async/Stream.html">Stream</a> representing the body of the response.</p>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        
