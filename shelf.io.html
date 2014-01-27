@@ -2,19 +2,19 @@
         <html>
         <head>
                 <meta charset="utf-8">
-        <title>shelf.core.old Library / Dart Documentation</title>
+        <title>shelf.io Library / Dart Documentation</title>
         <link rel="stylesheet" type="text/css"
             href="styles.css">
         <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
         <link rel="shortcut icon" href="favicon.ico">
         
         </head>
-        <body data-library="shelf.core.old">
+        <body data-library="shelf.io">
         <div class="page">
         <div class="header">
           <a href="index.html"><div class="logo"></div></a>
           <a href="index.html">Dart Documentation</a>
-         &rsaquo; <a href="shelf.core.old.html">shelf.core.old</a>        <div id="search-box">
+         &rsaquo; <a href="shelf.io.html">shelf.io</a>        <div id="search-box">
           <input type="search" name="q" id="q" autocomplete="off"
               class="search-input" placeholder="Search API">
         </div>
@@ -26,7 +26,10 @@
         
 </div>
 <div class="content">
-<h2><strong>shelf.core.old</strong> library</h2>
+<h2><strong>shelf.io</strong> library</h2>
+<div class="doc"><p>A Shelf adapter for handling <a class="crossref" href="http://api.dartlang.org/dart_io/HttpRequest.html">HttpRequest</a> objects from <code>dart:io</code>.</p>
+<p>One can provide an instance of <a class="crossref" href="http://api.dartlang.org/dart_io/HttpServer.html">HttpServer</a> as the <code>requests</code> parameter in
+<code>server</code>.</p></div>
 <div>
 <h3>Functions</h3>
 <div class="method"><h4 id="fromHttpRequest">
@@ -79,6 +82,11 @@ ShelfRequest fromHttpRequest(HttpRequest request) {
 <a href="http://api.dartlang.org/dart_async/Future.html" ref="external">Future</a> <strong>handleRequest</strong>(<a href="shelf.core/ShelfHandler.html">ShelfHandler</a> handler, <a href="http://api.dartlang.org/dart_io/HttpRequest.html" ref="external">HttpRequest</a> request) <a class="anchor-link" href="#handleRequest"
               title="Permalink to handleRequest">#</a></h4>
 <div class="doc">
+<p>Handles 
+<span class="param">request</span> with 
+<span class="param">handler</span> including writing the response to
+the <code>request.response</code>.</p>
+<p>Returns a <a class="crossref" href="http://api.dartlang.org/dart_async/Future.html">Future</a> which completes when the request has been handled.</p>
 <pre class="source">
 Future handleRequest(ShelfHandler handler, HttpRequest request) {
  var shelfRequest = fromHttpRequest(request);
@@ -108,7 +116,7 @@ Future handleRequest(ShelfHandler handler, HttpRequest request) {
 <div class="doc">
 <p>Serve a <a class="crossref" href="http://api.dartlang.org/dart_async/Stream.html">Stream</a> of <a class="crossref" href="http://api.dartlang.org/dart_io/HttpRequest.html">HttpRequest</a>s.</p>
 <p><a class="crossref" href="http://api.dartlang.org/dart_io/HttpServer.html">HttpServer</a> implements [Stream<HttpRequest>] so it can be passed directly to
-<a class="crossref" href="shelf.core.old.html#serve">serve</a>.</p>
+<a class="crossref" href="shelf.io.html#serve">serve</a>.</p>
 <pre class="source">
 StreamSubscription&lt;HttpRequest&gt; serve(ShelfHandler handler,
    Stream&lt;HttpRequest&gt; requests) {
