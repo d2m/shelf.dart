@@ -37,8 +37,9 @@ class ShelfStack {
  final ShelfStack _parent;
  final ShelfMiddleware _builder;
 
- const ShelfStack() :
-   _builder = null, _parent = null;
+ const ShelfStack()
+     : _builder = null,
+       _parent = null;
 
  ShelfStack._(this._builder, this._parent) {
    assert(_builder != null);
@@ -75,8 +76,9 @@ through their identity. An <a class="crossref" href="http://api.dartlang.org/dar
 only.</p>
 <div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Object.html" ref="external">Object</a> </div></div>
 <pre class="source">
-const ShelfStack() :
- _builder = null, _parent = null;
+const ShelfStack()
+   : _builder = null,
+     _parent = null;
 </pre>
 </div>
 </div>

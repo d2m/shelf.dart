@@ -38,25 +38,7 @@
 <p>Rack was inspired by
 <a href="http://www.python.org/dev/peps/pep-3333/#environ-variables">PEP 3333</a>.</p>
 <pre class="source">
-class ShelfRequest extends UnmodifiableMapView&lt;String, String&gt; {
-
- static const String CONTENT_LENGTH = 'CONTENT_LENGTH';
- static const String CONTENT_TYPE = 'CONTENT_TYPE';
- static const String PATH_INFO = 'PATH_INFO';
- static const String QUERY_STRING = 'QUERY_STRING';
- static const String REQUEST_METHOD = 'REQUEST_METHOD';
-
- /**
-  * The initial portion of the request URL's "path" that corresponds to the
-  * application object, so that the application knows its virtual "location".
-  * This may be an empty string, if the application corresponds to the "root"
-  * of the server.
-  */
- static const String SCRIPT_NAME = 'SCRIPT_NAME';
-
- static const String SERVER_NAME = 'SERVER_NAME';
- static const String SERVER_PORT = 'SERVER_PORT';
- static const String SERVER_PROTOCOL = 'SERVER_PROTOCOL';
+class ShelfRequest {
 
  //
  // Core Values
@@ -65,69 +47,47 @@ class ShelfRequest extends UnmodifiableMapView&lt;String, String&gt; {
  /**
   * The contents of any Content-Length fields in the HTTP request. May be
   * [:null:].
-  *
-  * Represented by the key [CONTENT_LENGTH].
   */
- int get contentLength =&gt; _intOrNull(this[CONTENT_LENGTH]);
-
- /**
-  * The contents of any Content-Type fields in the HTTP request. May be
-  * [:null:].
-  *
-  * Represented by the key [CONTENT_TYPE].
-  */
- String get contentType =&gt; this[CONTENT_TYPE];
+ final int contentLength;
 
  /**
   * The remainder of the request URL's "path", designating the virtual
   * "location" of the request's target within the application. This may be an
   * empty string, if the request URL targets the application root and does not
   * have a trailing slash.
-  *
-  * Represented by the key [PATH_INFO].
   */
- String get pathInfo =&gt; this[PATH_INFO];
+ final String pathInfo;
 
  /**
   * The portion of the request URL that follows the "?", if any. May be `null`.
-  *
-  * Represented by the key [QUERY_STRING].
   */
- String get queryString =&gt; this[QUERY_STRING];
+ final String queryString;
 
  /**
   * The HTTP request method, such as "GET" or "POST". This cannot ever be an
   * empty string, and so is always required.
-  *
-  * Represented by the key [REQUEST_METHOD].
   */
- String get requestMethod =&gt; this[REQUEST_METHOD];
+ final String requestMethod;
 
- String get scriptName =&gt; this[SCRIPT_NAME];
-
- /**
-  * Represented by the key [SERVER_PORT].
-  */
- int get serverPort =&gt; _intOrNull(this[SERVER_PORT]);
+ final String scriptName;
 
  /**
   * The version of the protocol the client used to send the request. Typically
   * this will be something like "HTTP/1.0" or "HTTP/1.1" and may be used by the
   * application to determine how to treat any HTTP request headers.
-  *
-  * Represented by the key [SERVER_PROTOCOL].
-  *
-  * (This variable should probably be called REQUEST_PROTOCOL, since it denotes
-  * the protocol used in the request, and is not necessarily the protocol that
-  * will be used in the server's response. However, for compatibility with CGI
-  * we have to keep the existing name.)
   */
- String get serverProtocol =&gt; this[SERVER_PROTOCOL];
+ final String requestProtocol;
+
+ final Uri originalUri;
+
+ final Map&lt;String, String&gt; headers;
 
  // TODO(kevmoo): validate that required items are present and in the correct
  //               format
- ShelfRequest(Map&lt;String, String&gt; headers) :
-   super(new SplayTreeMap.from(headers)) {
+ ShelfRequest(this.pathInfo, this.queryString, this.requestMethod,
+     this.scriptName, this.requestProtocol, this.contentLength,
+     this.originalUri, Map&lt;String, String&gt; headers)
+     : this.headers = new UnmodifiableMapView(new HashMap.from(headers)) {
 
    assert(requestMethod.isNotEmpty);
    assert(requestMethod == requestMethod.toUpperCase());
@@ -189,139 +149,24 @@ class ShelfRequest extends UnmodifiableMapView&lt;String, String&gt; {
 }
 </pre>
 </div>
-<h3>Extends</h3>
-<p>
-<span class="type-box"><span class="icon-class"></span><a href="../dart.pkg.collection.wrappers/DelegatingMap.html">DelegatingMap&lt;K, V&gt;</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><a href="../dart.pkg.collection.wrappers/UnmodifiableMapView.html">UnmodifiableMapView&lt;String, String&gt;</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ShelfRequest</strong></span></p>
-<div>
-<h3>Static Properties</h3>
-<div class="field"><h4 id="CONTENT_LENGTH">
-<button class="show-code">Code</button>
-const <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>CONTENT_LENGTH</strong> <a class="anchor-link"
-            href="#CONTENT_LENGTH"
-            title="Permalink to ShelfRequest.CONTENT_LENGTH">#</a>
-        </h4>
-        <div class="doc">
-<pre class="source">
-static const String CONTENT_LENGTH = 'CONTENT_LENGTH'
-</pre>
-</div>
-</div>
-<div class="field"><h4 id="CONTENT_TYPE">
-<button class="show-code">Code</button>
-const <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>CONTENT_TYPE</strong> <a class="anchor-link"
-            href="#CONTENT_TYPE"
-            title="Permalink to ShelfRequest.CONTENT_TYPE">#</a>
-        </h4>
-        <div class="doc">
-<pre class="source">
-static const String CONTENT_TYPE = 'CONTENT_TYPE'
-</pre>
-</div>
-</div>
-<div class="field"><h4 id="PATH_INFO">
-<button class="show-code">Code</button>
-const <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>PATH_INFO</strong> <a class="anchor-link"
-            href="#PATH_INFO"
-            title="Permalink to ShelfRequest.PATH_INFO">#</a>
-        </h4>
-        <div class="doc">
-<pre class="source">
-static const String PATH_INFO = 'PATH_INFO'
-</pre>
-</div>
-</div>
-<div class="field"><h4 id="QUERY_STRING">
-<button class="show-code">Code</button>
-const <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>QUERY_STRING</strong> <a class="anchor-link"
-            href="#QUERY_STRING"
-            title="Permalink to ShelfRequest.QUERY_STRING">#</a>
-        </h4>
-        <div class="doc">
-<pre class="source">
-static const String QUERY_STRING = 'QUERY_STRING'
-</pre>
-</div>
-</div>
-<div class="field"><h4 id="REQUEST_METHOD">
-<button class="show-code">Code</button>
-const <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>REQUEST_METHOD</strong> <a class="anchor-link"
-            href="#REQUEST_METHOD"
-            title="Permalink to ShelfRequest.REQUEST_METHOD">#</a>
-        </h4>
-        <div class="doc">
-<pre class="source">
-static const String REQUEST_METHOD = 'REQUEST_METHOD'
-</pre>
-</div>
-</div>
-<div class="field"><h4 id="SCRIPT_NAME">
-<button class="show-code">Code</button>
-const <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>SCRIPT_NAME</strong> <a class="anchor-link"
-            href="#SCRIPT_NAME"
-            title="Permalink to ShelfRequest.SCRIPT_NAME">#</a>
-        </h4>
-        <div class="doc">
-<p>The initial portion of the request URL's "path" that corresponds to the
-application object, so that the application knows its virtual "location".
-This may be an empty string, if the application corresponds to the "root"
-of the server.</p>
-<pre class="source">
-static const String SCRIPT_NAME = 'SCRIPT_NAME'
-</pre>
-</div>
-</div>
-<div class="field"><h4 id="SERVER_NAME">
-<button class="show-code">Code</button>
-const <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>SERVER_NAME</strong> <a class="anchor-link"
-            href="#SERVER_NAME"
-            title="Permalink to ShelfRequest.SERVER_NAME">#</a>
-        </h4>
-        <div class="doc">
-<pre class="source">
-static const String SERVER_NAME = 'SERVER_NAME'
-</pre>
-</div>
-</div>
-<div class="field"><h4 id="SERVER_PORT">
-<button class="show-code">Code</button>
-const <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>SERVER_PORT</strong> <a class="anchor-link"
-            href="#SERVER_PORT"
-            title="Permalink to ShelfRequest.SERVER_PORT">#</a>
-        </h4>
-        <div class="doc">
-<pre class="source">
-static const String SERVER_PORT = 'SERVER_PORT'
-</pre>
-</div>
-</div>
-<div class="field"><h4 id="SERVER_PROTOCOL">
-<button class="show-code">Code</button>
-const <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>SERVER_PROTOCOL</strong> <a class="anchor-link"
-            href="#SERVER_PROTOCOL"
-            title="Permalink to ShelfRequest.SERVER_PROTOCOL">#</a>
-        </h4>
-        <div class="doc">
-<pre class="source">
-static const String SERVER_PROTOCOL = 'SERVER_PROTOCOL'
-</pre>
-</div>
-</div>
-</div>
 <div>
 <h3>Constructors</h3>
 <div class="method"><h4 id="">
 <button class="show-code">Code</button>
-new <strong>ShelfRequest</strong>(<a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>&gt; headers) <a class="anchor-link" href="#"
+new <strong>ShelfRequest</strong>(<a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> pathInfo, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> queryString, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> requestMethod, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> scriptName, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> requestProtocol, <a href="http://api.dartlang.org/dart_core/int.html" ref="external">int</a> contentLength, <a href="http://api.dartlang.org/dart_core/Uri.html" ref="external">Uri</a> originalUri, <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>&gt; headers) <a class="anchor-link" href="#"
               title="Permalink to ShelfRequest.ShelfRequest">#</a></h4>
 <div class="doc">
 <div class="inherited">
-<p>Creates a Map instance with the default implementation, <a class="crossref" href="http://api.dartlang.org/dart_collection/LinkedHashMap.html">LinkedHashMap</a>.</p>
-<p>A <code>LinkedHashMap</code> requires the keys to implement compatible
-<code>operator==</code> and <code>hashCode</code>, and it allows null as a key.</p>
-<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div></div>
+<p>Creates a new <a class="crossref" href="http://api.dartlang.org/dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="http://api.dartlang.org/dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="http://api.dartlang.org/dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Object.html" ref="external">Object</a> </div></div>
 <pre class="source">
-ShelfRequest(Map&lt;String, String&gt; headers) :
- super(new SplayTreeMap.from(headers)) {
+ShelfRequest(this.pathInfo, this.queryString, this.requestMethod,
+   this.scriptName, this.requestProtocol, this.contentLength,
+   this.originalUri, Map&lt;String, String&gt; headers)
+   : this.headers = new UnmodifiableMapView(new HashMap.from(headers)) {
 
  assert(requestMethod.isNotEmpty);
  assert(requestMethod == requestMethod.toUpperCase());
@@ -361,86 +206,32 @@ final <a href="http://api.dartlang.org/dart_core/int.html" ref="external">int</a
         <div class="doc">
 <p>The contents of any Content-Length fields in the HTTP request. May be
 <code>null</code>.</p>
-<p>Represented by the key <a class="crossref" href="../shelf.core/ShelfRequest.html#CONTENT_LENGTH">CONTENT_LENGTH</a>.</p>
 <pre class="source">
-int get contentLength =&gt; _intOrNull(this[CONTENT_LENGTH]);
+final int contentLength
 </pre>
 </div>
 </div>
-<div class="field"><h4 id="contentType">
+<div class="field"><h4 id="headers">
 <button class="show-code">Code</button>
-final <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>contentType</strong> <a class="anchor-link"
-            href="#contentType"
-            title="Permalink to ShelfRequest.contentType">#</a>
+final <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>&gt;         <strong>headers</strong> <a class="anchor-link"
+            href="#headers"
+            title="Permalink to ShelfRequest.headers">#</a>
         </h4>
         <div class="doc">
-<p>The contents of any Content-Type fields in the HTTP request. May be
-<code>null</code>.</p>
-<p>Represented by the key <a class="crossref" href="../shelf.core/ShelfRequest.html#CONTENT_TYPE">CONTENT_TYPE</a>.</p>
 <pre class="source">
-String get contentType =&gt; this[CONTENT_TYPE];
+final Map&lt;String, String&gt; headers
 </pre>
 </div>
 </div>
-<div class="field inherited"><h4 id="isEmpty">
+<div class="field"><h4 id="originalUri">
 <button class="show-code">Code</button>
-final <a href="http://api.dartlang.org/dart_core/bool.html" ref="external">bool</a>         <strong>isEmpty</strong> <a class="anchor-link"
-            href="#isEmpty"
-            title="Permalink to ShelfRequest.isEmpty">#</a>
+final <a href="http://api.dartlang.org/dart_core/Uri.html" ref="external">Uri</a>         <strong>originalUri</strong> <a class="anchor-link"
+            href="#originalUri"
+            title="Permalink to ShelfRequest.originalUri">#</a>
         </h4>
-        <div class="inherited-from">inherited from <a href="../dart.pkg.collection.wrappers/DelegatingMap.html">DelegatingMap</a> </div><div class="doc">
-<div class="inherited">
-<p>Returns true if there is no key-value pair in the map.</p>
-<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div></div>
+        <div class="doc">
 <pre class="source">
-bool get isEmpty =&gt; _base.isEmpty;
-</pre>
-</div>
-</div>
-<div class="field inherited"><h4 id="isNotEmpty">
-<button class="show-code">Code</button>
-final <a href="http://api.dartlang.org/dart_core/bool.html" ref="external">bool</a>         <strong>isNotEmpty</strong> <a class="anchor-link"
-            href="#isNotEmpty"
-            title="Permalink to ShelfRequest.isNotEmpty">#</a>
-        </h4>
-        <div class="inherited-from">inherited from <a href="../dart.pkg.collection.wrappers/DelegatingMap.html">DelegatingMap</a> </div><div class="doc">
-<div class="inherited">
-<p>Returns true if there is at least one key-value pair in the map.</p>
-<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div></div>
-<pre class="source">
-bool get isNotEmpty =&gt; _base.isNotEmpty;
-</pre>
-</div>
-</div>
-<div class="field inherited"><h4 id="keys">
-<button class="show-code">Code</button>
-final <a href="http://api.dartlang.org/dart_core/Iterable.html" ref="external">Iterable</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>&gt;         <strong>keys</strong> <a class="anchor-link"
-            href="#keys"
-            title="Permalink to ShelfRequest.keys">#</a>
-        </h4>
-        <div class="inherited-from">inherited from <a href="../dart.pkg.collection.wrappers/DelegatingMap.html">DelegatingMap</a> </div><div class="doc">
-<div class="inherited">
-<p>The keys of <code>this</code>.</p>
-<p>The returned iterable has efficient <code>length</code> and <code>contains</code> operations,
-based on <a class="crossref" href="../dart.pkg.collection.wrappers/DelegatingMap.html#length">length</a> and <a class="crossref" href="../dart.pkg.collection.wrappers/DelegatingMap.html#containsKey">containsKey</a> of the map.</p>
-<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div></div>
-<pre class="source">
-Iterable&lt;K&gt; get keys =&gt; _base.keys;
-</pre>
-</div>
-</div>
-<div class="field inherited"><h4 id="length">
-<button class="show-code">Code</button>
-final <a href="http://api.dartlang.org/dart_core/int.html" ref="external">int</a>         <strong>length</strong> <a class="anchor-link"
-            href="#length"
-            title="Permalink to ShelfRequest.length">#</a>
-        </h4>
-        <div class="inherited-from">inherited from <a href="../dart.pkg.collection.wrappers/DelegatingMap.html">DelegatingMap</a> </div><div class="doc">
-<div class="inherited">
-<p>The number of key-value pairs in the map.</p>
-<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div></div>
-<pre class="source">
-int get length =&gt; _base.length;
+final Uri originalUri
 </pre>
 </div>
 </div>
@@ -455,9 +246,8 @@ final <a href="http://api.dartlang.org/dart_core/String.html" ref="external">Str
 "location" of the request's target within the application. This may be an
 empty string, if the request URL targets the application root and does not
 have a trailing slash.</p>
-<p>Represented by the key <a class="crossref" href="../shelf.core/ShelfRequest.html#PATH_INFO">PATH_INFO</a>.</p>
 <pre class="source">
-String get pathInfo =&gt; this[PATH_INFO];
+final String pathInfo
 </pre>
 </div>
 </div>
@@ -493,9 +283,8 @@ final <a href="http://api.dartlang.org/dart_core/String.html" ref="external">Str
         </h4>
         <div class="doc">
 <p>The portion of the request URL that follows the "?", if any. May be <code>null</code>.</p>
-<p>Represented by the key <a class="crossref" href="../shelf.core/ShelfRequest.html#QUERY_STRING">QUERY_STRING</a>.</p>
 <pre class="source">
-String get queryString =&gt; this[QUERY_STRING];
+final String queryString
 </pre>
 </div>
 </div>
@@ -508,9 +297,23 @@ final <a href="http://api.dartlang.org/dart_core/String.html" ref="external">Str
         <div class="doc">
 <p>The HTTP request method, such as "GET" or "POST". This cannot ever be an
 empty string, and so is always required.</p>
-<p>Represented by the key <a class="crossref" href="../shelf.core/ShelfRequest.html#REQUEST_METHOD">REQUEST_METHOD</a>.</p>
 <pre class="source">
-String get requestMethod =&gt; this[REQUEST_METHOD];
+final String requestMethod
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="requestProtocol">
+<button class="show-code">Code</button>
+final <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>requestProtocol</strong> <a class="anchor-link"
+            href="#requestProtocol"
+            title="Permalink to ShelfRequest.requestProtocol">#</a>
+        </h4>
+        <div class="doc">
+<p>The version of the protocol the client used to send the request. Typically
+this will be something like "HTTP/1.0" or "HTTP/1.1" and may be used by the
+application to determine how to treat any HTTP request headers.</p>
+<pre class="source">
+final String requestProtocol
 </pre>
 </div>
 </div>
@@ -522,184 +325,7 @@ final <a href="http://api.dartlang.org/dart_core/String.html" ref="external">Str
         </h4>
         <div class="doc">
 <pre class="source">
-String get scriptName =&gt; this[SCRIPT_NAME];
-</pre>
-</div>
-</div>
-<div class="field"><h4 id="serverPort">
-<button class="show-code">Code</button>
-final <a href="http://api.dartlang.org/dart_core/int.html" ref="external">int</a>         <strong>serverPort</strong> <a class="anchor-link"
-            href="#serverPort"
-            title="Permalink to ShelfRequest.serverPort">#</a>
-        </h4>
-        <div class="doc">
-<p>Represented by the key <a class="crossref" href="../shelf.core/ShelfRequest.html#SERVER_PORT">SERVER_PORT</a>.</p>
-<pre class="source">
-int get serverPort =&gt; _intOrNull(this[SERVER_PORT]);
-</pre>
-</div>
-</div>
-<div class="field"><h4 id="serverProtocol">
-<button class="show-code">Code</button>
-final <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>serverProtocol</strong> <a class="anchor-link"
-            href="#serverProtocol"
-            title="Permalink to ShelfRequest.serverProtocol">#</a>
-        </h4>
-        <div class="doc">
-<p>The version of the protocol the client used to send the request. Typically
-this will be something like "HTTP/1.0" or "HTTP/1.1" and may be used by the
-application to determine how to treat any HTTP request headers.</p>
-<p>Represented by the key <a class="crossref" href="../shelf.core/ShelfRequest.html#SERVER_PROTOCOL">SERVER_PROTOCOL</a>.</p>
-<p>(This variable should probably be called REQUEST_PROTOCOL, since it denotes
-the protocol used in the request, and is not necessarily the protocol that
-will be used in the server's response. However, for compatibility with CGI
-we have to keep the existing name.)</p>
-<pre class="source">
-String get serverProtocol =&gt; this[SERVER_PROTOCOL];
-</pre>
-</div>
-</div>
-<div class="field inherited"><h4 id="values">
-<button class="show-code">Code</button>
-final <a href="http://api.dartlang.org/dart_core/Iterable.html" ref="external">Iterable</a>&lt;<a href="../shelf.core/ShelfRequest.html">V</a>&gt;         <strong>values</strong> <a class="anchor-link"
-            href="#values"
-            title="Permalink to ShelfRequest.values">#</a>
-        </h4>
-        <div class="inherited-from">inherited from <a href="../dart.pkg.collection.wrappers/DelegatingMap.html">DelegatingMap</a> </div><div class="doc">
-<div class="inherited">
-<p>The values of <code>this</code>.</p>
-<p>The returned iterable has an efficient <code>length</code> method based on the
-<a class="crossref" href="../dart.pkg.collection.wrappers/DelegatingMap.html#length">length</a> of the map.</p>
-<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div></div>
-<pre class="source">
-Iterable&lt;V&gt; get values =&gt; _base.values;
-</pre>
-</div>
-</div>
-</div>
-<div class="inherited">
-<h3>Operators</h3>
-<div class="method inherited"><h4 id="[]">
-<button class="show-code">Code</button>
-<a href="../shelf.core/ShelfRequest.html">V</a> <strong>operator []</strong>(<a href="http://api.dartlang.org/dart_core/Object.html" ref="external">Object</a> key) <a class="anchor-link" href="#[]"
-              title="Permalink to ShelfRequest.operator []">#</a></h4>
-<div class="inherited-from">inherited from <a href="../dart.pkg.collection.wrappers/DelegatingMap.html">DelegatingMap</a> </div><div class="doc">
-<div class="inherited">
-<p>Returns the value for the given 
-<span class="param">key</span> or null if 
-<span class="param">key</span> is not
-in the map. Because null values are supported, one should either
-use <a class="crossref" href="../dart.pkg.collection.wrappers/DelegatingMap.html#containsKey">containsKey</a> to distinguish between an absent key and a null
-value, or use the <a class="crossref" href="../dart.pkg.collection.wrappers/DelegatingMap.html#putIfAbsent">putIfAbsent</a> method.</p>
-<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div></div>
-<pre class="source">
-V operator [](Object key) =&gt; _base[key];
-</pre>
-</div>
-</div>
-<div class="method inherited"><h4 id="[]=">
-<button class="show-code">Code</button>
-void <strong>operator []=</strong>(<a href="../shelf.core/ShelfRequest.html">K</a> key, <a href="../shelf.core/ShelfRequest.html">V</a> value) <a class="anchor-link" href="#[]="
-              title="Permalink to ShelfRequest.operator []=">#</a></h4>
-<div class="inherited-from">mixed in from <a href="../dart.pkg.collection.wrappers/UnmodifiableMapMixin.html">UnmodifiableMapMixin</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div><div class="doc">
-<p>Throws an <a class="crossref" href="http://api.dartlang.org/dart_core/UnsupportedError.html">UnsupportedError</a>;
-operations that change the map are disallowed.</p>
-<pre class="source">
-void operator []=(K key, V value) =&gt; _throw();
-</pre>
-</div>
-</div>
-</div>
-<div class="inherited">
-<h3>Methods</h3>
-<div class="method inherited"><h4 id="addAll">
-<button class="show-code">Code</button>
-void <strong>addAll</strong>(<a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; other) <a class="anchor-link" href="#addAll"
-              title="Permalink to ShelfRequest.addAll">#</a></h4>
-<div class="inherited-from">mixed in from <a href="../dart.pkg.collection.wrappers/UnmodifiableMapMixin.html">UnmodifiableMapMixin</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div><div class="doc">
-<p>Throws an <a class="crossref" href="http://api.dartlang.org/dart_core/UnsupportedError.html">UnsupportedError</a>;
-operations that change the map are disallowed.</p>
-<pre class="source">
-void addAll(Map&lt;K, V&gt; other) =&gt; _throw();
-</pre>
-</div>
-</div>
-<div class="method inherited"><h4 id="clear">
-<button class="show-code">Code</button>
-void <strong>clear</strong>() <a class="anchor-link" href="#clear"
-              title="Permalink to ShelfRequest.clear">#</a></h4>
-<div class="inherited-from">mixed in from <a href="../dart.pkg.collection.wrappers/UnmodifiableMapMixin.html">UnmodifiableMapMixin</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div><div class="doc">
-<p>Throws an <a class="crossref" href="http://api.dartlang.org/dart_core/UnsupportedError.html">UnsupportedError</a>;
-operations that change the map are disallowed.</p>
-<pre class="source">
-void clear() =&gt; _throw();
-</pre>
-</div>
-</div>
-<div class="method inherited"><h4 id="containsKey">
-<button class="show-code">Code</button>
-<a href="http://api.dartlang.org/dart_core/bool.html" ref="external">bool</a> <strong>containsKey</strong>(<a href="http://api.dartlang.org/dart_core/Object.html" ref="external">Object</a> key) <a class="anchor-link" href="#containsKey"
-              title="Permalink to ShelfRequest.containsKey">#</a></h4>
-<div class="inherited-from">inherited from <a href="../dart.pkg.collection.wrappers/DelegatingMap.html">DelegatingMap</a> </div><div class="doc">
-<div class="inherited">
-<p>Returns true if this map contains the given key.</p>
-<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div></div>
-<pre class="source">
-bool containsKey(Object key) =&gt; _base.containsKey(key);
-</pre>
-</div>
-</div>
-<div class="method inherited"><h4 id="containsValue">
-<button class="show-code">Code</button>
-<a href="http://api.dartlang.org/dart_core/bool.html" ref="external">bool</a> <strong>containsValue</strong>(<a href="http://api.dartlang.org/dart_core/Object.html" ref="external">Object</a> value) <a class="anchor-link" href="#containsValue"
-              title="Permalink to ShelfRequest.containsValue">#</a></h4>
-<div class="inherited-from">inherited from <a href="../dart.pkg.collection.wrappers/DelegatingMap.html">DelegatingMap</a> </div><div class="doc">
-<div class="inherited">
-<p>Returns true if this map contains the given value.</p>
-<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div></div>
-<pre class="source">
-bool containsValue(Object value) =&gt; _base.containsValue(value);
-</pre>
-</div>
-</div>
-<div class="method inherited"><h4 id="forEach">
-<button class="show-code">Code</button>
-void <strong>forEach</strong>(void f(<a href="../shelf.core/ShelfRequest.html">K</a> key, <a href="../shelf.core/ShelfRequest.html">V</a> value)) <a class="anchor-link" href="#forEach"
-              title="Permalink to ShelfRequest.forEach">#</a></h4>
-<div class="inherited-from">inherited from <a href="../dart.pkg.collection.wrappers/DelegatingMap.html">DelegatingMap</a> </div><div class="doc">
-<div class="inherited">
-<p>Applies 
-<span class="param">f</span> to each {key, value} pair of the map.</p>
-<p>It is an error to add or remove keys from the map during iteration.</p>
-<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div></div>
-<pre class="source">
-void forEach(void f(K key, V value)) {
- _base.forEach(f);
-}
-</pre>
-</div>
-</div>
-<div class="method inherited"><h4 id="putIfAbsent">
-<button class="show-code">Code</button>
-<a href="../shelf.core/ShelfRequest.html">V</a> <strong>putIfAbsent</strong>(<a href="../shelf.core/ShelfRequest.html">K</a> key, <a href="../shelf.core/ShelfRequest.html">V</a> ifAbsent()) <a class="anchor-link" href="#putIfAbsent"
-              title="Permalink to ShelfRequest.putIfAbsent">#</a></h4>
-<div class="inherited-from">mixed in from <a href="../dart.pkg.collection.wrappers/UnmodifiableMapMixin.html">UnmodifiableMapMixin</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div><div class="doc">
-<p>Throws an <a class="crossref" href="http://api.dartlang.org/dart_core/UnsupportedError.html">UnsupportedError</a>;
-operations that change the map are disallowed.</p>
-<pre class="source">
-V putIfAbsent(K key, V ifAbsent()) { _throw(); }
-</pre>
-</div>
-</div>
-<div class="method inherited"><h4 id="remove">
-<button class="show-code">Code</button>
-<a href="../shelf.core/ShelfRequest.html">V</a> <strong>remove</strong>(<a href="../shelf.core/ShelfRequest.html">K</a> key) <a class="anchor-link" href="#remove"
-              title="Permalink to ShelfRequest.remove">#</a></h4>
-<div class="inherited-from">mixed in from <a href="../dart.pkg.collection.wrappers/UnmodifiableMapMixin.html">UnmodifiableMapMixin</a>&lt;<a href="../shelf.core/ShelfRequest.html">K</a>, <a href="../shelf.core/ShelfRequest.html">V</a>&gt; </div><div class="doc">
-<p>Throws an <a class="crossref" href="http://api.dartlang.org/dart_core/UnsupportedError.html">UnsupportedError</a>;
-operations that change the map are disallowed.</p>
-<pre class="source">
-V remove(K key) { _throw(); }
+final String scriptName
 </pre>
 </div>
 </div>

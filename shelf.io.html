@@ -29,7 +29,7 @@
 <h2><strong>shelf.io</strong> library</h2>
 <div class="doc"><p>A Shelf adapter for handling <a class="crossref" href="http://api.dartlang.org/dart_io/HttpRequest.html">HttpRequest</a> objects from <code>dart:io</code>.</p>
 <p>One can provide an instance of <a class="crossref" href="http://api.dartlang.org/dart_io/HttpServer.html">HttpServer</a> as the <code>requests</code> parameter in
-<code>server</code>.</p></div>
+<a class="crossref" href="shelf.io.html#serve">serve</a>.</p></div>
 <div>
 <h3>Functions</h3>
 <div class="method"><h4 id="fromHttpRequest">
@@ -41,38 +41,25 @@
 <pre class="source">
 ShelfRequest fromHttpRequest(HttpRequest request) {
 
- var headers = &lt;String, String&gt; {
-   ShelfRequest.PATH_INFO: request.uri.path,
-   ShelfRequest.REQUEST_METHOD: request.method,
-   ShelfRequest.SCRIPT_NAME: '',
-   ShelfRequest.SERVER_PORT: request.connectionInfo.localPort.toString(),
-   ShelfRequest.SERVER_PROTOCOL: 'HTTP/${request.protocolVersion}'
- };
+ var serverProtocol = 'HTTP/${request.protocolVersion}';
 
- String contentType = (request.headers.contentType == null) ?
-     null : request.headers.contentType.toString();
+ var contentLength = (request.contentLength &gt; 0) ? request.contentLength : 0;
 
- if (request.headers.contentType != null) {
-   headers[ShelfRequest.CONTENT_TYPE] = request.headers.contentType.toString();
+ if(contentLength &gt; 0) {
+   throw new UnimplementedError("We don't have support for request content...yet");
  }
 
- if (request.contentLength &gt;= 0) {
-   headers[ShelfRequest.CONTENT_LENGTH] = request.contentLength.toString();
- }
-
+ var headers = new Map();
  request.headers.forEach((k, v) {
    assert(k != null);
-
-   var newKey = k.replaceAll('-', '_').toUpperCase();
-
-   if (!headers.containsKey(newKey)) {
-     newKey = 'HTTP_$newKey';
-
-     headers[newKey] = v.single;
-   }
+   headers[k] = v.single;
  });
 
- return new ShelfRequest(headers);
+ // TODO(kevmoo) Uh...
+ var scriptName = '';
+
+ return new ShelfRequest(request.uri.path, request.uri.query, request.method,
+     scriptName, serverProtocol, contentLength, request.uri, headers);
 }
 </pre>
 </div>
