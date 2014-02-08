@@ -156,8 +156,10 @@ final <a href="http://api.dartlang.org/dart_core/Iterator.html" ref="external">I
             href="#iterator"
             title="Permalink to UnmodifiableSetMixin&lt;E&gt;.iterator">#</a>
         </h4>
-        <div class="inherited-from">inherited from <a href="http://api.dartlang.org/dart_core/Iterable.html" ref="external">Iterable</a> </div><div class="doc">
-<p>Returns an Iterator that iterates over this Iterable object.</p>
+        <div class="inherited-from">inherited from <a href="http://api.dartlang.org/dart_core/Set.html" ref="external">Set</a> </div><div class="doc">
+<p>Provides an iterator that iterates over the elements of this set.</p>
+<p>The order of iteration is defined by the individual <code>Set</code> implementation,
+but must be consistent between changes to the set.</p>
 <pre class="source">
 Iterator&lt;E&gt; get iterator;
 </pre>
@@ -331,8 +333,8 @@ are not elements of
 <div class="inherited">
 <p>Returns the 
 <span class="param">index</span>th element.</p>
-<p>If <code>this</code> has fewer than 
-<span class="param">index</span> elements throws a <a class="crossref" href="http://api.dartlang.org/dart_core/RangeError.html">RangeError</a>.</p>
+<p>The 
+<span class="param">index</span> must be non-negative and less than <a class="crossref" href="http://api.dartlang.org/dart_collection/IterableBase.html#length">length</a>.</p>
 <p>Note: if <code>this</code> does not have a deterministic iteration order then the
 function may simply return any element without any iteration if there are
 at least 

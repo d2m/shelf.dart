@@ -67,7 +67,7 @@ class ShelfRequest {
   * The HTTP request method, such as "GET" or "POST". This cannot ever be an
   * empty string, and so is always required.
   */
- final String requestMethod;
+ final String method;
 
  final String scriptName;
 
@@ -84,13 +84,13 @@ class ShelfRequest {
 
  // TODO(kevmoo): validate that required items are present and in the correct
  //               format
- ShelfRequest(this.pathInfo, this.queryString, this.requestMethod,
+ ShelfRequest(this.pathInfo, this.queryString, this.method,
      this.scriptName, this.requestProtocol, this.contentLength,
      this.originalUri, Map&lt;String, String&gt; headers)
      : this.headers = new UnmodifiableMapView(new HashMap.from(headers)) {
 
-   assert(requestMethod.isNotEmpty);
-   assert(requestMethod == requestMethod.toUpperCase());
+   assert(method.isNotEmpty);
+   assert(method == method.toUpperCase());
 
    // The &lt;tt&gt;SCRIPT_NAME&lt;/tt&gt;, if non-empty, must start with &lt;tt&gt;/&lt;/tt&gt;
    assert(scriptName != null);
@@ -153,7 +153,7 @@ class ShelfRequest {
 <h3>Constructors</h3>
 <div class="method"><h4 id="">
 <button class="show-code">Code</button>
-new <strong>ShelfRequest</strong>(<a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> pathInfo, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> queryString, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> requestMethod, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> scriptName, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> requestProtocol, <a href="http://api.dartlang.org/dart_core/int.html" ref="external">int</a> contentLength, <a href="http://api.dartlang.org/dart_core/Uri.html" ref="external">Uri</a> originalUri, <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>&gt; headers) <a class="anchor-link" href="#"
+new <strong>ShelfRequest</strong>(<a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> pathInfo, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> queryString, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> method, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> scriptName, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> requestProtocol, <a href="http://api.dartlang.org/dart_core/int.html" ref="external">int</a> contentLength, <a href="http://api.dartlang.org/dart_core/Uri.html" ref="external">Uri</a> originalUri, <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>&gt; headers) <a class="anchor-link" href="#"
               title="Permalink to ShelfRequest.ShelfRequest">#</a></h4>
 <div class="doc">
 <div class="inherited">
@@ -163,13 +163,13 @@ through their identity. An <a class="crossref" href="http://api.dartlang.org/dar
 only.</p>
 <div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Object.html" ref="external">Object</a> </div></div>
 <pre class="source">
-ShelfRequest(this.pathInfo, this.queryString, this.requestMethod,
+ShelfRequest(this.pathInfo, this.queryString, this.method,
    this.scriptName, this.requestProtocol, this.contentLength,
    this.originalUri, Map&lt;String, String&gt; headers)
    : this.headers = new UnmodifiableMapView(new HashMap.from(headers)) {
 
- assert(requestMethod.isNotEmpty);
- assert(requestMethod == requestMethod.toUpperCase());
+ assert(method.isNotEmpty);
+ assert(method == method.toUpperCase());
 
  // The &lt;tt&gt;SCRIPT_NAME&lt;/tt&gt;, if non-empty, must start with &lt;tt&gt;/&lt;/tt&gt;
  assert(scriptName != null);
@@ -220,6 +220,20 @@ final <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a
         <div class="doc">
 <pre class="source">
 final Map&lt;String, String&gt; headers
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="method">
+<button class="show-code">Code</button>
+final <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>method</strong> <a class="anchor-link"
+            href="#method"
+            title="Permalink to ShelfRequest.method">#</a>
+        </h4>
+        <div class="doc">
+<p>The HTTP request method, such as "GET" or "POST". This cannot ever be an
+empty string, and so is always required.</p>
+<pre class="source">
+final String method
 </pre>
 </div>
 </div>
@@ -285,20 +299,6 @@ final <a href="http://api.dartlang.org/dart_core/String.html" ref="external">Str
 <p>The portion of the request URL that follows the "?", if any. May be <code>null</code>.</p>
 <pre class="source">
 final String queryString
-</pre>
-</div>
-</div>
-<div class="field"><h4 id="requestMethod">
-<button class="show-code">Code</button>
-final <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>         <strong>requestMethod</strong> <a class="anchor-link"
-            href="#requestMethod"
-            title="Permalink to ShelfRequest.requestMethod">#</a>
-        </h4>
-        <div class="doc">
-<p>The HTTP request method, such as "GET" or "POST". This cannot ever be an
-empty string, and so is always required.</p>
-<pre class="source">
-final String requestMethod
 </pre>
 </div>
 </div>

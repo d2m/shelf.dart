@@ -60,8 +60,10 @@ new <strong>UnmodifiableMapView</strong>(<a href="http://api.dartlang.org/dart_c
 <div class="doc">
 <div class="inherited">
 <p>Creates a Map instance with the default implementation, <a class="crossref" href="http://api.dartlang.org/dart_collection/LinkedHashMap.html">LinkedHashMap</a>.</p>
+<p>This constructor is equivalent to the non-const map literal <code>&lt;K,V&gt;{}</code>.</p>
 <p>A <code>LinkedHashMap</code> requires the keys to implement compatible
-<code>operator==</code> and <code>hashCode</code>, and it allows null as a key.</p>
+<code>operator==</code> and <code>hashCode</code>, and it allows null as a key.
+It iterates in key insertion order.</p>
 <div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../dart.pkg.collection.wrappers/UnmodifiableMapView.html">K</a>, <a href="../dart.pkg.collection.wrappers/UnmodifiableMapView.html">V</a>&gt; </div></div>
 <pre class="source">
 UnmodifiableMapView(Map&lt;K, V&gt; baseMap) : super(baseMap);
@@ -112,6 +114,8 @@ final <a href="http://api.dartlang.org/dart_core/Iterable.html" ref="external">I
 <p>The keys of <code>this</code>.</p>
 <p>The returned iterable has efficient <code>length</code> and <code>contains</code> operations,
 based on <a class="crossref" href="../dart.pkg.collection.wrappers/DelegatingMap.html#length">length</a> and <a class="crossref" href="../dart.pkg.collection.wrappers/DelegatingMap.html#containsKey">containsKey</a> of the map.</p>
+<p>The order of iteration is defined by the individual <code>Map</code> implementation,
+but must be consistent between changes to the map.</p>
 <div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../dart.pkg.collection.wrappers/UnmodifiableMapView.html">K</a>, <a href="../dart.pkg.collection.wrappers/UnmodifiableMapView.html">V</a>&gt; </div></div>
 <pre class="source">
 Iterable&lt;K&gt; get keys =&gt; _base.keys;
@@ -142,6 +146,9 @@ final <a href="http://api.dartlang.org/dart_core/Iterable.html" ref="external">I
         <div class="inherited-from">inherited from <a href="../dart.pkg.collection.wrappers/DelegatingMap.html">DelegatingMap</a> </div><div class="doc">
 <div class="inherited">
 <p>The values of <code>this</code>.</p>
+<p>The values are iterated in the order of their corresponding keys.
+This means that iterating <a class="crossref" href="../dart.pkg.collection.wrappers/DelegatingMap.html#keys">keys</a> and <a class="crossref" href="../dart.pkg.collection.wrappers/DelegatingMap.html#values">values</a> in parrallel will
+provided matching pairs of keys and values.</p>
 <p>The returned iterable has an efficient <code>length</code> method based on the
 <a class="crossref" href="../dart.pkg.collection.wrappers/DelegatingMap.html#length">length</a> of the map.</p>
 <div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../dart.pkg.collection.wrappers/UnmodifiableMapView.html">K</a>, <a href="../dart.pkg.collection.wrappers/UnmodifiableMapView.html">V</a>&gt; </div></div>
@@ -244,7 +251,7 @@ void <strong>forEach</strong>(void f(<a href="../dart.pkg.collection.wrappers/Un
 <div class="inherited">
 <p>Applies 
 <span class="param">f</span> to each {key, value} pair of the map.</p>
-<p>It is an error to add or remove keys from the map during iteration.</p>
+<p>Adding or removing keys from the map during iteration is not allowed.</p>
 <div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="../dart.pkg.collection.wrappers/UnmodifiableMapView.html">K</a>, <a href="../dart.pkg.collection.wrappers/UnmodifiableMapView.html">V</a>&gt; </div></div>
 <pre class="source">
 void forEach(void f(K key, V value)) {

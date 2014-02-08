@@ -330,8 +330,8 @@ bool contains(Object element) =&gt; _base.contains(element);
 <div class="inherited">
 <p>Returns the 
 <span class="param">index</span>th element.</p>
-<p>If <code>this</code> has fewer than 
-<span class="param">index</span> elements throws a <a class="crossref" href="http://api.dartlang.org/dart_core/RangeError.html">RangeError</a>.</p>
+<p>The 
+<span class="param">index</span> must be non-negative and less than <a class="crossref" href="../dart.pkg.collection.wrappers/DelegatingIterable.html#length">length</a>.</p>
 <p>Note: if <code>this</code> does not have a deterministic iteration order then the
 function may simply return any element without any iteration if there are
 at least 

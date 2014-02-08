@@ -53,7 +53,7 @@ abstract class ShelfResponse {
  factory ShelfResponse.string(int statusCode, Map&lt;String, String&gt; headers,
      String body) = _StringShelfResponse;
 
- ShelfResponse._(this.statusCode, Map&lt;String, String&gt; headers) :
+ ShelfResponse(this.statusCode, Map&lt;String, String&gt; headers) :
    // copy the source map to ensure headers are immutable
    this.headers = new UnmodifiableMapView(new Map.from(headers)) {
    assert(statusCode != null);
@@ -70,6 +70,27 @@ abstract class ShelfResponse {
 </div>
 <div>
 <h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>ShelfResponse</strong>(<a href="http://api.dartlang.org/dart_core/int.html" ref="external">int</a> statusCode, <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>&gt; headers) <a class="anchor-link" href="#"
+              title="Permalink to ShelfResponse.ShelfResponse">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="http://api.dartlang.org/dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="http://api.dartlang.org/dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="http://api.dartlang.org/dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Object.html" ref="external">Object</a> </div></div>
+<pre class="source">
+ShelfResponse(this.statusCode, Map&lt;String, String&gt; headers) :
+ // copy the source map to ensure headers are immutable
+ this.headers = new UnmodifiableMapView(new Map.from(headers)) {
+ assert(statusCode != null);
+ assert(statusCode &gt; 0);
+}
+</pre>
+</div>
+</div>
 <div class="method"><h4 id="string">
 <button class="show-code">Code</button>
 factory <strong>ShelfResponse.string</strong>(<a href="http://api.dartlang.org/dart_core/int.html" ref="external">int</a> statusCode, <a href="http://api.dartlang.org/dart_core/Map.html" ref="external">Map</a>&lt;<a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a>&gt; headers, <a href="http://api.dartlang.org/dart_core/String.html" ref="external">String</a> body) <a class="anchor-link" href="#string"

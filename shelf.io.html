@@ -52,7 +52,14 @@ ShelfRequest fromHttpRequest(HttpRequest request) {
  var headers = new Map();
  request.headers.forEach((k, v) {
    assert(k != null);
-   headers[k] = v.single;
+   switch(k) {
+     case HttpHeaders.IF_MODIFIED_SINCE:
+       headers[k] = request.headers.ifModifiedSince.toString();
+       break;
+     default:
+       headers[k] = v.single;
+       break;
+   }
  });
 
  // TODO(kevmoo) Uh...
