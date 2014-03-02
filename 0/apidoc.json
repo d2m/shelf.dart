@@ -1,1 +1,0 @@
-{"name":"dart:","description":"Dart System Libraries","libraries":[{"name":"package:collection/wrappers.dart","refId":"dart.pkg.collection.wrappers"},{"refId":"shelf.builder"},{"refId":"shelf.core"},{"refId":"shelf.handlers"},{"refId":"shelf.io"}],"revision":"0","dependencies":[]}
