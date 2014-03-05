@@ -12,7 +12,6 @@
 library harness_console;
 
 import 'package:unittest/unittest.dart';
-import 'package:unittest/vm_config.dart';
 
 import 'create_middleware_test.dart' as create_middleware;
 import 'log_middleware_test.dart' as log_middleware;
@@ -23,11 +22,6 @@ import 'shelf_stack_test.dart' as shelf_stack;
 import 'string_scanner_test.dart' as string_scanner;
 
 void main() {
-  testCore(new VMConfiguration());
-}
-
-void testCore(Configuration config) {
-  unittestConfiguration = config;
   groupSep = ' - ';
 
   group('createMiddleware', create_middleware.main);
