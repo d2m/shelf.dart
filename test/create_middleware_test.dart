@@ -208,4 +208,4 @@ void main() {
 _failHandler(ShelfRequest request) => fail('should never get here');
 
 final ShelfResponse _middlewareResponse =
-    new ShelfResponse.string(200, {'from': 'middleware'}, 'middleware content');
+    new ShelfResponse.ok('middleware content', headers: {'from': 'middleware'});

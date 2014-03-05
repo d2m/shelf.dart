@@ -16,6 +16,5 @@ void main() {
 
 
 ShelfResponse _echoRequest(ShelfRequest request) {
-  return new ShelfResponse.string(200, const {},
-      'Request for "${request.pathInfo}"');
+  return new ShelfResponse.ok('Request for "${request.pathInfo}"');
 }

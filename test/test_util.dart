@@ -15,10 +15,9 @@ import 'package:shelf/src/util.dart';
 /// `Hello from ${request.pathInfo}`.
 ShelfResponse syncHandler(ShelfRequest request, {int statusCode,
     Map<String, String> headers}) {
-  if(statusCode == null) statusCode = 200;
-  if(headers == null) headers = {};
-  return new ShelfResponse.string(statusCode, headers,
-      'Hello from ${request.pathInfo}');
+  if (statusCode == null) statusCode = 200;
+  return new ShelfResponse(statusCode, headers: headers,
+      body: 'Hello from ${request.pathInfo}');
 }
 
 /// Calls [syncHandler] and wraps the response in a [Future].

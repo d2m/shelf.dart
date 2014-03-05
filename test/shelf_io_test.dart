@@ -101,12 +101,10 @@ void main() {
 
   test('custom response headers are received by the client', () {
     _scheduleServer((request) {
-      var headers = {
+      return new ShelfResponse.ok('Hello from /', headers: {
         'test-header': 'test-value',
         'test-list': 'a, b, c'
-      };
-
-      return new ShelfResponse.string(HttpStatus.OK, headers, 'Hello from /');
+      });
     });
 
     return _scheduleRequest().then((response) {
@@ -118,7 +116,7 @@ void main() {
 
   test('custom status code is received by the client', () {
     _scheduleServer((request) {
-      return new ShelfResponse.string(299, {}, 'Hello from /');
+      return new ShelfResponse(299, body: 'Hello from /');
     });
 
     return _scheduleRequest().then((response) {

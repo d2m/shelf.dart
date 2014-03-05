@@ -17,6 +17,7 @@ import 'package:unittest/vm_config.dart';
 import 'create_middleware_test.dart' as create_middleware;
 import 'log_middleware_test.dart' as log_middleware;
 import 'media_type_test.dart' as media_type;
+import 'response_test.dart' as response;
 import 'shelf_io_test.dart' as shelf_io;
 import 'shelf_stack_test.dart' as shelf_stack;
 import 'string_scanner_test.dart' as string_scanner;
@@ -32,6 +33,7 @@ void testCore(Configuration config) {
   group('createMiddleware', create_middleware.main);
   group('logRequests', log_middleware.main);
   group('MediaType', media_type.main);
+  group('ShelfResponse', response.main);
   group('shelf_io', shelf_io.main);
   group('ShelfStack', shelf_stack.main);
   group('StringScanner', string_scanner.main);
