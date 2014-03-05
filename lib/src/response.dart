@@ -9,6 +9,8 @@ import 'dart:convert';
 
 import 'package:collection/wrappers.dart';
 
+import 'media_type.dart';
+
 /// The response returned by a [ShelfHandler].
 abstract class ShelfResponse {
   /// The HTTP status code of the response.
@@ -18,6 +20,43 @@ abstract class ShelfResponse {
   ///
   /// The value is immutable.
   final Map<String, String> headers;
+
+  /// The MIME type of the response.
+  ///
+  /// This is parsed from the Content-Type header in [headers]. It contains only
+  /// the MIME type, without any Content-Type parameters.
+  ///
+  /// If [headers] doesn't have a Content-Type header, this will be `null`.
+  String get mimeType {
+    var contentType = _contentType;
+    if (contentType == null) return null;
+    return contentType.mimeType;
+  }
+
+  /// The encoding of the response.
+  ///
+  /// This is parsed from the "charset" paramater of the Content-Type header in
+  /// [headers].
+  ///
+  /// If [headers] doesn't have a Content-Type header or it specifies an
+  /// encoding that [dart:convert] doesn't support, this will be `null`.
+  Encoding get encoding {
+    var contentType = _contentType;
+    if (contentType == null) return null;
+    if (!contentType.parameters.containsKey('charset')) return null;
+    return Encoding.getByName(contentType.parameters['charset']);
+  }
+
+  /// The parsed version of the Content-Type header in [headers].
+  ///
+  /// This is cached for efficient access.
+  MediaType get _contentType {
+    if (_contentTypeCache != null) return _contentTypeCache;
+    if (!headers.containsKey('content-type')) return null;
+    _contentTypeCache = new MediaType.parse(headers['content-type']);
+    return _contentTypeCache;
+  }
+  MediaType _contentTypeCache;
 
   /// Creates a [ShelfResponse] with a [String] body.
   //TODO(kevmoo) Rework constructors to support many body types.
