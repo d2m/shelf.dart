@@ -22,7 +22,7 @@ import '../util.dart';
 /// When an error is thrown, `isError` is true and `msg` contains the error
 /// description and stack trace.
 //TODO(kevmoo): Need to handle and log errors as well
-ShelfMiddleware logRequests({void logger(String msg, bool isError)}) =>
+Middleware logRequests({void logger(String msg, bool isError)}) =>
     (innerHandler) {
   if (logger == null) logger = _defaultLogger;
 

@@ -21,7 +21,7 @@ import 'src/util.dart';
 ///
 /// See the documentation for [HttpServer.bind] for more details on [address],
 /// [port], and [backlog].
-Future<HttpServer> serve(ShelfHandler handler, address, int port,
+Future<HttpServer> serve(Handler handler, address, int port,
     {int backlog}) {
   if (backlog == null) backlog = 0;
   return HttpServer.bind(address, port, backlog: backlog).then((server) {
@@ -34,14 +34,14 @@ Future<HttpServer> serve(ShelfHandler handler, address, int port,
 ///
 /// [HttpServer] implements [Stream<HttpRequest>] so it can be passed directly
 /// to [serveRequests].
-void serveRequests(Stream<HttpRequest> requests, ShelfHandler handler) {
+void serveRequests(Stream<HttpRequest> requests, Handler handler) {
   requests.listen((request) => handleRequest(request, handler));
 }
 
 /// Uses [handler] to handle [request].
 ///
 /// Returns a [Future] which completes when the request has been handled.
-Future handleRequest(HttpRequest request, ShelfHandler handler) {
+Future handleRequest(HttpRequest request, Handler handler) {
   var shelfRequest = _fromHttpRequest(request);
 
   return syncFuture(() => handler(shelfRequest))
@@ -63,8 +63,8 @@ Future handleRequest(HttpRequest request, ShelfHandler handler) {
   });
 }
 
-/// Creates a new [ShelfRequest] from the provided [HttpRequest].
-ShelfRequest _fromHttpRequest(HttpRequest request) {
+/// Creates a new [Request] from the provided [HttpRequest].
+Request _fromHttpRequest(HttpRequest request) {
   var contentLength = request.contentLength >= 0 ?
       request.contentLength : null;
 
@@ -81,12 +81,12 @@ ShelfRequest _fromHttpRequest(HttpRequest request) {
     headers[k] = v.join(',');
   });
 
-  return new ShelfRequest(request.uri.path, request.uri.query, request.method,
+  return new Request(request.uri.path, request.uri.query, request.method,
       '', request.protocolVersion, contentLength, request.requestedUri,
       headers);
 }
 
-Future _writeResponse(ShelfResponse response, HttpResponse httpResponse) {
+Future _writeResponse(Response response, HttpResponse httpResponse) {
   httpResponse.statusCode = response.statusCode;
 
   response.headers.forEach((header, value) {
@@ -104,8 +104,8 @@ Future _writeResponse(ShelfResponse response, HttpResponse httpResponse) {
 
 // TODO(kevmoo) A developer mode is needed to include error info in response
 // TODO(kevmoo) Make error output plugable. stderr, logging, etc
-ShelfResponse _logError(String message) {
+Response _logError(String message) {
   stderr.writeln('ERROR - ${new DateTime.now()}');
   stderr.writeln(message);
-  return new ShelfResponse.internalServerError();
+  return new Response.internalServerError();
 }

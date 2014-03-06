@@ -13,8 +13,8 @@ import 'package:stack_trace/stack_trace.dart';
 import 'media_type.dart';
 import 'util.dart';
 
-/// The response returned by a [ShelfHandler].
-class ShelfResponse {
+/// The response returned by a [Handler].
+class Response {
   /// The HTTP status code of the response.
   final int statusCode;
 
@@ -77,7 +77,7 @@ class ShelfResponse {
   /// If [encoding] is passed, the "encoding" field of the Content-Type header
   /// in [headers] will be set appropriately. If there is no existing
   /// Content-Type header, it will be set to "application/octet-stream".
-  ShelfResponse.ok(body, {Map<String, String> headers, Encoding encoding})
+  Response.ok(body, {Map<String, String> headers, Encoding encoding})
       : this(200, body: body, headers: headers, encoding: encoding);
 
   /// Constructs a 301 Moved Permanently response.
@@ -94,7 +94,7 @@ class ShelfResponse {
   /// If [encoding] is passed, the "encoding" field of the Content-Type header
   /// in [headers] will be set appropriately. If there is no existing
   /// Content-Type header, it will be set to "application/octet-stream".
-  ShelfResponse.movedPermanently(location, {body, Map<String, String> headers,
+  Response.movedPermanently(location, {body, Map<String, String> headers,
       Encoding encoding})
       : this._redirect(301, location, body, headers, encoding);
 
@@ -112,7 +112,7 @@ class ShelfResponse {
   /// If [encoding] is passed, the "encoding" field of the Content-Type header
   /// in [headers] will be set appropriately. If there is no existing
   /// Content-Type header, it will be set to "application/octet-stream".
-  ShelfResponse.found(location, {body, Map<String, String> headers,
+  Response.found(location, {body, Map<String, String> headers,
       Encoding encoding})
       : this._redirect(302, location, body, headers, encoding);
 
@@ -131,12 +131,12 @@ class ShelfResponse {
   /// If [encoding] is passed, the "encoding" field of the Content-Type header
   /// in [headers] will be set appropriately. If there is no existing
   /// Content-Type header, it will be set to "application/octet-stream".
-  ShelfResponse.seeOther(location, {body, Map<String, String> headers,
+  Response.seeOther(location, {body, Map<String, String> headers,
       Encoding encoding})
       : this._redirect(303, location, body, headers, encoding);
 
   /// Constructs a helper constructor for redirect responses.
-  ShelfResponse._redirect(int statusCode, location, body,
+  Response._redirect(int statusCode, location, body,
       Map<String, String> headers, Encoding encoding)
       : this(statusCode,
             body: body,
@@ -150,7 +150,7 @@ class ShelfResponse {
   /// information used to determine whether the requested resource has changed
   /// since the last request. It indicates that the resource has not changed and
   /// the old value should be used.
-  ShelfResponse.notModified({Map<String, String> headers})
+  Response.notModified({Map<String, String> headers})
       : this(304, headers: _addHeader(
             headers, 'date', formatHttpDate(new DateTime.now())));
 
@@ -166,7 +166,7 @@ class ShelfResponse {
   /// If [encoding] is passed, the "encoding" field of the Content-Type header
   /// in [headers] will be set appropriately. If there is no existing
   /// Content-Type header, it will be set to "application/octet-stream".
-  ShelfResponse.forbidden(body, {Map<String, String> headers,
+  Response.forbidden(body, {Map<String, String> headers,
       Encoding encoding})
       : this(403, body: body, headers: headers);
 
@@ -183,7 +183,7 @@ class ShelfResponse {
   /// If [encoding] is passed, the "encoding" field of the Content-Type header
   /// in [headers] will be set appropriately. If there is no existing
   /// Content-Type header, it will be set to "application/octet-stream".
-  ShelfResponse.notFound(body, {Map<String, String> headers, Encoding encoding})
+  Response.notFound(body, {Map<String, String> headers, Encoding encoding})
       : this(404, body: body, headers: headers);
 
   /// Constructs a 500 Internal Server Error response.
@@ -199,7 +199,7 @@ class ShelfResponse {
   /// If [encoding] is passed, the "encoding" field of the Content-Type header
   /// in [headers] will be set appropriately. If there is no existing
   /// Content-Type header, it will be set to "application/octet-stream".
-  ShelfResponse.internalServerError({body, Map<String, String> headers,
+  Response.internalServerError({body, Map<String, String> headers,
       Encoding encoding})
       : this(500,
             headers: body == null ? _adjust500Headers(headers) : headers,
@@ -217,7 +217,7 @@ class ShelfResponse {
   /// If [encoding] is passed, the "encoding" field of the Content-Type header
   /// in [headers] will be set appropriately. If there is no existing
   /// Content-Type header, it will be set to "application/octet-stream".
-  ShelfResponse(this.statusCode, {body, Map<String, String> headers,
+  Response(this.statusCode, {body, Map<String, String> headers,
       Encoding encoding})
       : _body = _bodyToStream(body, encoding),
         headers = _adjustHeaders(headers, encoding) {
@@ -228,7 +228,7 @@ class ShelfResponse {
 
   /// Returns a [Stream] representing the body of the response.
   ///
-  /// This can only be called once per [ShelfRequest].
+  /// This can only be called once per [Request].
   Stream<List<int>> read() => _body;
 
   /// Returns a [Future] that returns the body of the response as a String.
@@ -238,7 +238,7 @@ class ShelfResponse {
   /// doesn't exist or doesn't have a "charset" parameter, UTF-8 is used.
   ///
   /// This calls [read] internally, which can only be called once per
-  /// [ShelfRequest].
+  /// [Request].
   Future<String> readAsString([Encoding encoding]) {
     if (encoding == null) encoding = this.encoding;
     if (encoding == null) encoding = UTF8;

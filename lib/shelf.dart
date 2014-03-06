@@ -4,11 +4,9 @@
 
 library shelf;
 
-//TODO(kevmoo): Get rid of 'Shelf' prefix everywhere
-
 export 'src/handlers/logger.dart';
 export 'src/middleware.dart';
 export 'src/request.dart';
 export 'src/response.dart';
-export 'src/shelf_stack.dart';
-export 'src/typedef.dart';
+export 'src/stack.dart';
+export 'src/handler.dart';

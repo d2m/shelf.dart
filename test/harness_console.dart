@@ -18,7 +18,7 @@ import 'log_middleware_test.dart' as log_middleware;
 import 'media_type_test.dart' as media_type;
 import 'response_test.dart' as response;
 import 'shelf_io_test.dart' as shelf_io;
-import 'shelf_stack_test.dart' as shelf_stack;
+import 'stack_test.dart' as stack;
 import 'string_scanner_test.dart' as string_scanner;
 
 void main() {
@@ -27,8 +27,8 @@ void main() {
   group('createMiddleware', create_middleware.main);
   group('logRequests', log_middleware.main);
   group('MediaType', media_type.main);
-  group('ShelfResponse', response.main);
+  group('Response', response.main);
   group('shelf_io', shelf_io.main);
-  group('ShelfStack', shelf_stack.main);
+  group('Stack', stack.main);
   group('StringScanner', string_scanner.main);
 }

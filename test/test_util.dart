@@ -9,24 +9,24 @@ import 'dart:async';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/src/util.dart';
 
-/// A simple, synchronous handler for [ShelfRequest].
+/// A simple, synchronous handler for [Request].
 ///
 /// By default, replies with a status code 200, empty headers, and
 /// `Hello from ${request.pathInfo}`.
-ShelfResponse syncHandler(ShelfRequest request, {int statusCode,
+Response syncHandler(Request request, {int statusCode,
     Map<String, String> headers}) {
   if (statusCode == null) statusCode = 200;
-  return new ShelfResponse(statusCode, headers: headers,
+  return new Response(statusCode, headers: headers,
       body: 'Hello from ${request.pathInfo}');
 }
 
 /// Calls [syncHandler] and wraps the response in a [Future].
-Future<ShelfResponse> asyncHandler(ShelfRequest request) =>
+Future<Response> asyncHandler(Request request) =>
     new Future(() => syncHandler(request));
 
 /// Makes a simple GET request to [handler] and returns the result.
-Future<ShelfResponse> makeSimpleRequest(ShelfHandler handler) =>
+Future<Response> makeSimpleRequest(Handler handler) =>
     syncFuture(() => handler(_request));
 
-final _request = new ShelfRequest('/', '', 'GET', '', '1.1', 0,
+final _request = new Request('/', '', 'GET', '', '1.1', 0,
     Uri.parse('http://localhost/'), {});

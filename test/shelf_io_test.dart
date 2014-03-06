@@ -73,7 +73,7 @@ void main() {
     });
   });
 
-  test('ShelfRequest is populated correctly', () {
+  test('Request is populated correctly', () {
     var path = '/foo/bar?qs=value#anchor';
 
     _scheduleServer((request) {
@@ -101,7 +101,7 @@ void main() {
 
   test('custom response headers are received by the client', () {
     _scheduleServer((request) {
-      return new ShelfResponse.ok('Hello from /', headers: {
+      return new Response.ok('Hello from /', headers: {
         'test-header': 'test-value',
         'test-list': 'a, b, c'
       });
@@ -116,7 +116,7 @@ void main() {
 
   test('custom status code is received by the client', () {
     _scheduleServer((request) {
-      return new ShelfResponse(299, body: 'Hello from /');
+      return new Response(299, body: 'Hello from /');
     });
 
     return _scheduleRequest().then((response) {
@@ -144,7 +144,7 @@ void main() {
 
 int _serverPort;
 
-Future _scheduleServer(ShelfHandler handler) {
+Future _scheduleServer(Handler handler) {
   return schedule(() => shelf_io.serve(handler, 'localhost', 0).then((server) {
     currentSchedule.onComplete.schedule(() {
       _serverPort = null;

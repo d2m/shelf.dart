@@ -10,7 +10,7 @@ import 'package:collection/wrappers.dart';
 import 'package:path/path.dart' as p;
 
 /// Represents an HTTP request to be processed by a Shelf application.
-class ShelfRequest {
+class Request {
   /// The contents of any Content-Length fields in the HTTP request. May be
   /// `null`.
   final int contentLength;
@@ -56,7 +56,7 @@ class ShelfRequest {
   /// The value is immutable.
   final Map<String, String> headers;
 
-  ShelfRequest(this.pathInfo, String queryString, this.method,
+  Request(this.pathInfo, String queryString, this.method,
       this.scriptName, this.protocolVersion, this.contentLength,
       this.requestedUri, Map<String, String> headers)
       : this.queryString = queryString == null ? '' : queryString,

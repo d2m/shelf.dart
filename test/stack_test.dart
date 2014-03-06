@@ -10,7 +10,7 @@ import 'package:unittest/unittest.dart';
 import 'test_util.dart';
 
 void main() {
-  test('compose middleware with ShelfStack', () {
+  test('compose middleware with Stack', () {
     int accessLocation = 0;
 
     var middlewareA = createMiddleware(requestHandler: (request) {
@@ -33,7 +33,7 @@ void main() {
       return response;
     });
 
-    var handler = const ShelfStack()
+    var handler = const Stack()
         .addMiddleware(middlewareA)
         .addMiddleware(middlewareB)
         .addHandler((request) {
@@ -48,7 +48,7 @@ void main() {
     });
   });
 
-  test('ShelfStack can be used as middleware', () {
+  test('Stack can be used as middleware', () {
     int accessLocation = 0;
 
     var middlewareA = createMiddleware(requestHandler: (request) {
@@ -71,11 +71,11 @@ void main() {
       return response;
     });
 
-    var innerStack = const ShelfStack()
+    var innerStack = const Stack()
         .addMiddleware(middlewareA)
         .addMiddleware(middlewareB);
 
-    var handler = const ShelfStack()
+    var handler = const Stack()
         .addMiddleware(innerStack.middleware)
         .addHandler((request) {
       expect(accessLocation, 2);
