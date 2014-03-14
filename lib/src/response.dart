@@ -65,6 +65,31 @@ class Response {
   }
   MediaType _contentTypeCache;
 
+  /// The date and time after which the response's data should be considered
+  /// stale.
+  ///
+  /// This is parsed from the Expires header in [headers]. If [headers] doesn't
+  /// have an Expires header, this will be `null`.
+  DateTime get expires {
+    if (_expiresCache != null) return _expiresCache;
+    if (!headers.containsKey('expires')) return null;
+    _expiresCache = parseHttpDate(headers['expires']);
+    return _expiresCache;
+  }
+  DateTime _expiresCache;
+
+  /// The date and time the source of the response's data was last modified.
+  ///
+  /// This is parsed from the Last-Modified header in [headers]. If [headers]
+  /// doesn't have a Last-Modified header, this will be `null`.
+  DateTime get lastModified {
+    if (_lastModifiedCache != null) return _lastModifiedCache;
+    if (!headers.containsKey('last-modified')) return null;
+    _lastModifiedCache = parseHttpDate(headers['last-modified']);
+    return _lastModifiedCache;
+  }
+  DateTime _lastModifiedCache;
+
   /// Constructs a 200 OK response.
   ///
   /// This indicates that the request has succeeded.

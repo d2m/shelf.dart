@@ -56,6 +56,20 @@ class Request {
   /// The value is immutable.
   final Map<String, String> headers;
 
+  /// If this is non-`null` and the requested resource hasn't been modified
+  /// since this date and time, the server should return a 304 Not Modified
+  /// response.
+  ///
+  /// This is parsed from the If-Modified-Since header in [headers]. If
+  /// [headers] doesn't have an If-Modified-Since header, this will be `null`.
+  DateTime get ifModifiedSince {
+    if (_ifModifiedSinceCache != null) return _ifModifiedSinceCache;
+    if (!headers.containsKey('if-modified-since')) return null;
+    _ifModifiedSinceCache = parseHttpDate(headers['if-modified-since']);
+    return _ifModifiedSinceCache;
+  }
+  DateTime _ifModifiedSinceCache;
+
   Request(this.pathInfo, String queryString, this.method,
       this.scriptName, this.protocolVersion, this.contentLength,
       this.requestedUri, Map<String, String> headers)

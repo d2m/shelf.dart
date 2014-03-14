@@ -195,4 +195,28 @@ void main() {
       }).encoding, equals(LATIN1));
     });
   });
+
+  group("expires", () {
+    test("is null without an Expires header", () {
+      expect(new Response.ok("okay!").expires, isNull);
+    });
+
+    test("comes from the Expires header", () {
+      expect(new Response.ok("okay!", headers: {
+        'expires': 'Sun, 06 Nov 1994 08:49:37 GMT'
+      }).expires, equals(DateTime.parse("1994-11-06 08:49:37z")));
+    });
+  });
+
+  group("lastModified", () {
+    test("is null without a Last-Modified header", () {
+      expect(new Response.ok("okay!").lastModified, isNull);
+    });
+
+    test("comes from the Last-Modified header", () {
+      expect(new Response.ok("okay!", headers: {
+        'last-modified': 'Sun, 06 Nov 1994 08:49:37 GMT'
+      }).lastModified, equals(DateTime.parse("1994-11-06 08:49:37z")));
+    });
+  });
 }
