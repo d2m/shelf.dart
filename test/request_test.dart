@@ -4,9 +4,6 @@
 
 library shelf.request_test;
 
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:shelf/shelf.dart';
 import 'package:unittest/unittest.dart';
 
@@ -15,7 +12,7 @@ void main() {
     test("is null without an If-Modified-Since header", () {
       var request = new Request("/", "", "GET", "", "1.1", 0,
           Uri.parse("http://localhost/"), {});
-      expect(request.lastModified, isNull);
+      expect(request.ifModifiedSince, isNull);
     });
 
     test("comes from the Last-Modified header", () {
@@ -23,7 +20,7 @@ void main() {
           Uri.parse("http://localhost/"), {
         'if-modified-since': 'Sun, 06 Nov 1994 08:49:37 GMT'
       });
-      expect(request.lastModified,
+      expect(request.ifModifiedSince,
           equals(DateTime.parse("1994-11-06 08:49:37z")));
     });
   });

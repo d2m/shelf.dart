@@ -9,6 +9,8 @@ import 'dart:collection';
 import 'package:collection/wrappers.dart';
 import 'package:path/path.dart' as p;
 
+import 'util.dart';
+
 /// Represents an HTTP request to be processed by a Shelf application.
 class Request {
   /// The contents of any Content-Length fields in the HTTP request. May be

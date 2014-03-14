@@ -1,5 +1,5 @@
 name: shelf
-version: 0.2.0
+version: 0.2.1-dev
 author: Kevin Moore <kevmoo@google.com>
 description: Web Server Middleware for Dart
 homepage: https://github.com/kevmoo/shelf.dart
