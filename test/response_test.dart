@@ -219,4 +219,16 @@ void main() {
       }).lastModified, equals(DateTime.parse("1994-11-06 08:49:37z")));
     });
   });
+
+  group("contentLength", () {
+    test("is null without a content-length header", () {
+      expect(new Response.ok("okay!").contentLength, isNull);
+    });
+
+    test("comes from the content-length header", () {
+      expect(new Response.ok("okay!", headers: {
+        'content-length': '42'
+      }).contentLength, equals(42));
+    });
+  });
 }

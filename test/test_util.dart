@@ -28,5 +28,5 @@ Future<Response> asyncHandler(Request request) =>
 Future<Response> makeSimpleRequest(Handler handler) =>
     syncFuture(() => handler(_request));
 
-final _request = new Request('/', '', 'GET', '', '1.1', 0,
+final _request = new Request('/', '', 'GET', '', '1.1',
     Uri.parse('http://localhost/'), {});

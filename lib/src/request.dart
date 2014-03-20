@@ -13,10 +13,6 @@ import 'util.dart';
 
 /// Represents an HTTP request to be processed by a Shelf application.
 class Request {
-  /// The contents of any Content-Length fields in the HTTP request. May be
-  /// `null`.
-  final int contentLength;
-
   /// The remainder of the [requestedUri] path designating the virtual
   /// "location" of the request's target within the handler.
   ///
@@ -72,9 +68,20 @@ class Request {
   }
   DateTime _ifModifiedSinceCache;
 
+  /// The contents of any Content-Length fields in the HTTP response.
+  ///
+  /// If not set, `null`.
+  int get contentLength {
+    if (_contentLengthCache != null) return _contentLengthCache;
+    if (!headers.containsKey('content-length')) return null;
+    _contentLengthCache = int.parse(headers['content-length']);
+    return _contentLengthCache;
+  }
+  int _contentLengthCache;
+
   Request(this.pathInfo, String queryString, this.method,
-      this.scriptName, this.protocolVersion, this.contentLength,
-      this.requestedUri, Map<String, String> headers)
+      this.scriptName, this.protocolVersion, this.requestedUri,
+      Map<String, String> headers)
       : this.queryString = queryString == null ? '' : queryString,
         this.headers = new UnmodifiableMapView(new HashMap.from(headers)) {
     if (method.isEmpty) throw new ArgumentError('method cannot be empty.');
@@ -98,10 +105,6 @@ class Request {
 
     if (scriptName.isEmpty && pathInfo.isEmpty) {
       throw new ArgumentError('scriptName and pathInfo cannot both be empty.');
-    }
-
-    if (contentLength != null && contentLength < 0) {
-      throw new ArgumentError('contentLength must be null or non-negative.');
     }
   }
 

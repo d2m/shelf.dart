@@ -90,6 +90,17 @@ class Response {
   }
   DateTime _lastModifiedCache;
 
+  /// The contents of any Content-Length fields in the HTTP response.
+  ///
+  /// If not set, `null`.
+  int get contentLength {
+    if (_contentLengthCache != null) return _contentLengthCache;
+    if (!headers.containsKey('content-length')) return null;
+    _contentLengthCache = int.parse(headers['content-length']);
+    return _contentLengthCache;
+  }
+  int _contentLengthCache;
+
   /// Constructs a 200 OK response.
   ///
   /// This indicates that the request has succeeded.

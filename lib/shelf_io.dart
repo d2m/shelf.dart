@@ -82,7 +82,7 @@ Request _fromHttpRequest(HttpRequest request) {
   });
 
   return new Request(request.uri.path, request.uri.query, request.method,
-      '', request.protocolVersion, contentLength, request.requestedUri,
+      '', request.protocolVersion, request.requestedUri,
       headers);
 }
 
