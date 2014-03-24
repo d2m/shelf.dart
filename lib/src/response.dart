@@ -8,62 +8,15 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/wrappers.dart';
-import 'package:stack_trace/stack_trace.dart';
 
 import 'media_type.dart';
+import 'message.dart';
 import 'util.dart';
 
 /// The response returned by a [Handler].
-class Response {
+class Response extends Message {
   /// The HTTP status code of the response.
   final int statusCode;
-
-  /// The HTTP headers of the response.
-  ///
-  /// The value is immutable.
-  final Map<String, String> headers;
-
-  /// The streaming body of the response.
-  ///
-  /// This can be read via [read] or [readAsString].
-  final Stream<List<int>> _body;
-
-  /// The MIME type of the response.
-  ///
-  /// This is parsed from the Content-Type header in [headers]. It contains only
-  /// the MIME type, without any Content-Type parameters.
-  ///
-  /// If [headers] doesn't have a Content-Type header, this will be `null`.
-  String get mimeType {
-    var contentType = _contentType;
-    if (contentType == null) return null;
-    return contentType.mimeType;
-  }
-
-  /// The encoding of the response.
-  ///
-  /// This is parsed from the "charset" paramater of the Content-Type header in
-  /// [headers].
-  ///
-  /// If [headers] doesn't have a Content-Type header or it specifies an
-  /// encoding that [dart:convert] doesn't support, this will be `null`.
-  Encoding get encoding {
-    var contentType = _contentType;
-    if (contentType == null) return null;
-    if (!contentType.parameters.containsKey('charset')) return null;
-    return Encoding.getByName(contentType.parameters['charset']);
-  }
-
-  /// The parsed version of the Content-Type header in [headers].
-  ///
-  /// This is cached for efficient access.
-  MediaType get _contentType {
-    if (_contentTypeCache != null) return _contentTypeCache;
-    if (!headers.containsKey('content-type')) return null;
-    _contentTypeCache = new MediaType.parse(headers['content-type']);
-    return _contentTypeCache;
-  }
-  MediaType _contentTypeCache;
 
   /// The date and time after which the response's data should be considered
   /// stale.
@@ -89,17 +42,6 @@ class Response {
     return _lastModifiedCache;
   }
   DateTime _lastModifiedCache;
-
-  /// The contents of any Content-Length fields in the HTTP response.
-  ///
-  /// If not set, `null`.
-  int get contentLength {
-    if (_contentLengthCache != null) return _contentLengthCache;
-    if (!headers.containsKey('content-length')) return null;
-    _contentLengthCache = int.parse(headers['content-length']);
-    return _contentLengthCache;
-  }
-  int _contentLengthCache;
 
   /// Constructs a 200 OK response.
   ///
@@ -255,30 +197,11 @@ class Response {
   /// Content-Type header, it will be set to "application/octet-stream".
   Response(this.statusCode, {body, Map<String, String> headers,
       Encoding encoding})
-      : _body = _bodyToStream(body, encoding),
-        headers = _adjustHeaders(headers, encoding) {
+      : super(_adjustHeaders(headers, encoding),
+          _bodyToStream(body, encoding)) {
     if (statusCode < 100) {
       throw new ArgumentError("Invalid status code: $statusCode.");
     }
-  }
-
-  /// Returns a [Stream] representing the body of the response.
-  ///
-  /// This can only be called once per [Request].
-  Stream<List<int>> read() => _body;
-
-  /// Returns a [Future] that returns the body of the response as a String.
-  ///
-  /// If [encoding] is passed, that's used to decode the response body.
-  /// Otherwise the encoding is taken from the Content-Type header. If that
-  /// doesn't exist or doesn't have a "charset" parameter, UTF-8 is used.
-  ///
-  /// This calls [read] internally, which can only be called once per
-  /// [Request].
-  Future<String> readAsString([Encoding encoding]) {
-    if (encoding == null) encoding = this.encoding;
-    if (encoding == null) encoding = UTF8;
-    return Chain.track(encoding.decodeStream(read()));
   }
 }
 

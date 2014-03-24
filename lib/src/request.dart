@@ -4,15 +4,17 @@
 
 library shelf.request;
 
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:collection/wrappers.dart';
 import 'package:path/path.dart' as p;
 
+import 'message.dart';
 import 'util.dart';
 
 /// Represents an HTTP request to be processed by a Shelf application.
-class Request {
+class Request extends Message {
   /// The remainder of the [requestedUri] path designating the virtual
   /// "location" of the request's target within the handler.
   ///
@@ -49,11 +51,6 @@ class Request {
   /// The original [Uri] for the request.
   final Uri requestedUri;
 
-  /// The HTTP headers.
-  ///
-  /// The value is immutable.
-  final Map<String, String> headers;
-
   /// If this is non-`null` and the requested resource hasn't been modified
   /// since this date and time, the server should return a 304 Not Modified
   /// response.
@@ -68,22 +65,12 @@ class Request {
   }
   DateTime _ifModifiedSinceCache;
 
-  /// The contents of any Content-Length fields in the HTTP response.
-  ///
-  /// If not set, `null`.
-  int get contentLength {
-    if (_contentLengthCache != null) return _contentLengthCache;
-    if (!headers.containsKey('content-length')) return null;
-    _contentLengthCache = int.parse(headers['content-length']);
-    return _contentLengthCache;
-  }
-  int _contentLengthCache;
-
   Request(this.pathInfo, String queryString, this.method,
       this.scriptName, this.protocolVersion, this.requestedUri,
-      Map<String, String> headers)
+      Map<String, String> headers, {Stream<List<int>> body})
       : this.queryString = queryString == null ? '' : queryString,
-        this.headers = new UnmodifiableMapView(new HashMap.from(headers)) {
+        super(new UnmodifiableMapView(new HashMap.from(headers)),
+            body == null ? new Stream.fromIterable([]) : body) {
     if (method.isEmpty) throw new ArgumentError('method cannot be empty.');
 
     if (scriptName.isNotEmpty && !scriptName.startsWith('/')) {

@@ -65,14 +65,6 @@ Future handleRequest(HttpRequest request, Handler handler) {
 
 /// Creates a new [Request] from the provided [HttpRequest].
 Request _fromHttpRequest(HttpRequest request) {
-  var contentLength = request.contentLength >= 0 ?
-      request.contentLength : null;
-
-  if (contentLength != null && contentLength > 0) {
-    throw new UnimplementedError(
-        "Shelf doesn't yet support HTTP requests with bodies.");
-  }
-
   //TODO(kevmoo): make headers case-insensitive
   var headers = {};
   request.headers.forEach((k, v) {
@@ -83,7 +75,7 @@ Request _fromHttpRequest(HttpRequest request) {
 
   return new Request(request.uri.path, request.uri.query, request.method,
       '', request.protocolVersion, request.requestedUri,
-      headers);
+      headers, body: request);
 }
 
 Future _writeResponse(Response response, HttpResponse httpResponse) {

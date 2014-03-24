@@ -5,6 +5,7 @@
 library shelf_io_test;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -18,7 +19,7 @@ void main() {
   test('sync handler returns a value to the client', () {
     _scheduleServer(syncHandler);
 
-    return _scheduleRequest().then((response) {
+    return _scheduleGet().then((response) {
       expect(response.statusCode, HttpStatus.OK);
       expect(response.body, 'Hello from /');
     });
@@ -27,7 +28,7 @@ void main() {
   test('async handler returns a value to the client', () {
     _scheduleServer(asyncHandler);
 
-    return _scheduleRequest().then((response) {
+    return _scheduleGet().then((response) {
       expect(response.statusCode, HttpStatus.OK);
       expect(response.body, 'Hello from /');
     });
@@ -36,7 +37,7 @@ void main() {
   test('sync null response leads to a 500', () {
     _scheduleServer((request) => null);
 
-    return _scheduleRequest().then((response) {
+    return _scheduleGet().then((response) {
       expect(response.statusCode, HttpStatus.INTERNAL_SERVER_ERROR);
       expect(response.body, 'Internal Server Error');
     });
@@ -45,7 +46,7 @@ void main() {
   test('async null response leads to a 500', () {
     _scheduleServer((request) => new Future.value(null));
 
-    return _scheduleRequest().then((response) {
+    return _scheduleGet().then((response) {
       expect(response.statusCode, HttpStatus.INTERNAL_SERVER_ERROR);
       expect(response.body, 'Internal Server Error');
     });
@@ -56,7 +57,7 @@ void main() {
       throw new UnsupportedError('test');
     });
 
-    return _scheduleRequest().then((response) {
+    return _scheduleGet().then((response) {
       expect(response.statusCode, HttpStatus.INTERNAL_SERVER_ERROR);
       expect(response.body, 'Internal Server Error');
     });
@@ -67,7 +68,7 @@ void main() {
       return new Future.error('test');
     });
 
-    return _scheduleRequest().then((response) {
+    return _scheduleGet().then((response) {
       expect(response.statusCode, HttpStatus.INTERNAL_SERVER_ERROR);
       expect(response.body, 'Internal Server Error');
     });
@@ -107,7 +108,7 @@ void main() {
       });
     });
 
-    return _scheduleRequest().then((response) {
+    return _scheduleGet().then((response) {
       expect(response.statusCode, HttpStatus.OK);
       expect(response.headers['test-header'], 'test-value');
       expect(response.body, 'Hello from /');
@@ -119,7 +120,7 @@ void main() {
       return new Response(299, body: 'Hello from /');
     });
 
-    return _scheduleRequest().then((response) {
+    return _scheduleGet().then((response) {
       expect(response.statusCode, 299);
       expect(response.body, 'Hello from /');
     });
@@ -135,9 +136,47 @@ void main() {
       'custom-header': 'client value'
     };
 
-    return _scheduleRequest(headers: headers).then((response) {
+    return _scheduleGet(headers: headers).then((response) {
       expect(response.statusCode, HttpStatus.OK);
       expect(response.body, 'Hello from /');
+    });
+  });
+
+  test('post with empty content', () {
+    _scheduleServer((request) {
+      expect(request.mimeType, isNull);
+      expect(request.encoding, isNull);
+      expect(request.method, 'POST');
+      expect(request.contentLength, 0);
+
+      return request.readAsString().then((body) {
+        expect(body, '');
+        return syncHandler(request);
+      });
+    });
+
+    return _schedulePost().then((response) {
+      expect(response.statusCode, HttpStatus.OK);
+      expect(response.stream.bytesToString(), completion('Hello from /'));
+    });
+  });
+
+  test('post with request content', () {
+    _scheduleServer((request) {
+      expect(request.mimeType, 'text/plain');
+      expect(request.encoding, UTF8);
+      expect(request.method, 'POST');
+      expect(request.contentLength, 9);
+
+      return request.readAsString().then((body) {
+        expect(body, 'test body');
+        return syncHandler(request);
+      });
+    });
+
+    return _schedulePost(body: 'test body').then((response) {
+      expect(response.statusCode, HttpStatus.OK);
+      expect(response.stream.bytesToString(), completion('Hello from /'));
     });
   });
 }
@@ -155,9 +194,24 @@ Future _scheduleServer(Handler handler) {
   }));
 }
 
-Future<http.Response> _scheduleRequest({Map<String, String> headers}) {
+Future<http.Response> _scheduleGet({Map<String, String> headers}) {
   if (headers == null) headers = {};
 
   return schedule(() =>
       http.get('http://localhost:$_serverPort/', headers: headers));
+}
+
+Future<http.StreamedResponse> _schedulePost({Map<String, String> headers,
+    String body}) {
+
+  return schedule(() {
+
+    var request = new http.Request('POST',
+        Uri.parse('http://localhost:$_serverPort/'));
+
+    if (headers != null) request.headers.addAll(headers);
+    if (body != null) request.body = body;
+
+    return request.send();
+  });
 }
