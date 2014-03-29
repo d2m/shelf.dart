@@ -37,7 +37,7 @@ shelf.Response _echoRequest(shelf.Request request) {
 ## Inspiration
 
 * [Connect](http://www.senchalabs.org/connect/) for NodeJS.
-  * Read [this great write-up](http://howtonode.org/connect-it) to understand
-  the overall philosophy of all of these models.
+    * Read [this great write-up](http://howtonode.org/connect-it) to understand
+      the overall philosophy of all of these models.
 * [Rack](http://rack.github.io/) for Ruby.
 * [WSGI](http://legacy.python.org/dev/peps/pep-3333/) for Python.
